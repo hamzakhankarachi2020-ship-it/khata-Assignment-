@@ -4,6 +4,30 @@ An offline-first operations dashboard for a bakery, rusk shop, or small retail c
 
 The application is designed for quick counter work: fewer screens, clear stock signals, searchable records, and local data that remains available in the browser without a backend connection.
 
+## About This Project
+
+Hamza Rusk Counter Desk is a practical retail management system created for small bakeries, rusk shops, and neighborhood stores that need a simple way to run daily counter operations. It combines billing, product management, customer records, purchasing, inventory tracking, and business insights in one calm and easy-to-scan interface.
+
+The project is intentionally designed around real shop workflows: a cashier can complete a sale quickly, a shop owner can understand stock and credit at a glance, and staff can maintain accurate records without depending on a complex enterprise system. The local-first approach also makes the application useful in environments where internet access is limited or unreliable.
+
+The current release is a frontend-focused working prototype with realistic seeded bakery data. It demonstrates the complete user experience and keeps changes in the browser so the workspace can be explored immediately. The surrounding API, database, OpenAPI, and generated client packages provide a foundation for a future connected version with shared accounts, cloud persistence, and multi-device access.
+
+### Who It Is For
+
+- Bakery and rusk shop owners
+- Small retail counter operators
+- Cashiers handling daily sales
+- Staff managing stock and supplier deliveries
+- Developers extending the workspace into a connected retail platform
+
+### Project Goals
+
+- Make daily counter billing fast and understandable.
+- Keep product, customer, purchase, and inventory records connected.
+- Surface low-stock and credit information before it becomes a problem.
+- Provide useful reports without requiring complex accounting software.
+- Keep the interface responsive, accessible, and comfortable for repeated use.
+
 ## Highlights
 
 - **Dashboard overview** with today's sales, items moved, low-stock alerts, open customer credit, sales rhythm, and latest tickets.
