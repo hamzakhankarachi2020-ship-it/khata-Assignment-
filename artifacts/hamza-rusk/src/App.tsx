@@ -96,7 +96,7 @@ function Shell({ children, data }: { children: ReactNode; data: Data }) {
   const [location] = useLocation(); const [menu, setMenu] = useState(false);
   return <div className="app-shell">
     <aside className="sidebar">
-      <div style={{ padding: '24px 24px 20px', display: 'flex', alignItems: 'center', gap: 11 }}><div style={{ width: 34, height: 34, borderRadius: 10, background: 'hsl(var(--sidebar-primary))', color: 'hsl(var(--sidebar-primary-foreground))', display: 'grid', placeItems: 'center', fontFamily: 'var(--app-font-serif)', fontSize: 21, fontWeight: 700 }}>H</div><div className="brand-copy"><div style={{ fontFamily: 'var(--app-font-serif)', fontSize: 17 }}>Hamza Rusk</div><div style={{ fontSize: 10, color: 'hsl(var(--sidebar-foreground) / .48)', marginTop: 2 }}>COUNTER DESK</div></div></div>
+      <div style={{ padding: '24px 24px 20px', display: 'flex', alignItems: 'center', gap: 11 }}><img src="/favicon.svg" alt="Hamza Rusk logo" style={{ width: 34, height: 34, borderRadius: 10, display: 'block' }} /><div className="brand-copy"><div style={{ fontFamily: 'var(--app-font-serif)', fontSize: 17 }}>Hamza Rusk</div><div style={{ fontSize: 10, color: 'hsl(var(--sidebar-foreground) / .48)', marginTop: 2 }}>COUNTER DESK</div></div></div>
       <div className="nav-label">Workspace</div>{nav.slice(0, 2).map((item) => <NavItem key={item.href} item={item} location={location} />)}
       <div className="nav-label">Records</div>{nav.slice(2, 7).map((item) => <NavItem key={item.href} item={item} location={location} />)}
       <div className="nav-label">Insights</div><NavItem item={nav[7]} location={location} />
