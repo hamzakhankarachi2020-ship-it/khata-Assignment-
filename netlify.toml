@@ -1,0 +1,12 @@
+[build]
+  command = "pnpm --filter @workspace/hamza-rusk build"
+  publish = "artifacts/hamza-rusk/dist/public"
+
+[build.environment]
+  BASE_PATH = "/"
+  PORT = "5173"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
