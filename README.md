@@ -114,6 +114,45 @@ The current release is a frontend-focused working prototype with realistic seede
 
 ## Technology Stack
 
+### Built With
+
+This project is built as a TypeScript monorepo. The main user-facing application is a React frontend running on Vite, while the workspace also includes Node.js API and database packages for future connected functionality.
+
+### Application architecture
+
+```text
+Browser
+	-> React 19 + TypeScript UI
+	-> Wouter routes and reusable Radix UI components
+	-> Local state and browser localStorage
+
+Workspace foundation
+	-> Node.js tooling and pnpm workspaces
+	-> Express 5 API server
+	-> Drizzle ORM + PostgreSQL driver
+	-> OpenAPI, Zod schemas, and generated API clients
+```
+
+### Main technologies used
+
+- **React 19**: Builds the interactive dashboard, POS counter, forms, tables, modals, reports, and settings screens.
+- **Node.js**: Provides the JavaScript runtime for Vite, workspace scripts, the API server, code generation, and build tooling.
+- **TypeScript**: Adds static types for products, customers, sales, purchases, inventory adjustments, settings, routes, and workspace packages.
+- **Vite 7**: Runs the development server and creates the production frontend bundle.
+- **Tailwind CSS 4**: Provides the modern CSS utility foundation through the Vite plugin.
+- **Custom CSS**: Defines the warm bakery visual system, responsive layout, typography, cards, tables, badges, buttons, overlays, animations, and mobile breakpoints.
+- **Wouter**: Handles lightweight client-side navigation without a large routing framework.
+- **Radix UI**: Supplies accessible primitives for menus, dialogs, popovers, tabs, forms, and other controls.
+- **Lucide React**: Provides consistent interface icons for navigation and actions.
+- **TanStack React Query**: Provides the query client foundation for future API-backed data flows.
+- **localStorage**: Persists the current local demo workspace in the browser for offline-friendly use.
+- **Express 5**: Provides the optional Node.js API server foundation.
+- **Drizzle ORM and PostgreSQL (`pg`)**: Provide the database access and schema foundation for a connected release.
+- **Zod and Drizzle Zod**: Provide runtime schema validation and type-safe API/database contracts.
+- **OpenAPI and Orval**: Define API contracts and generate typed API clients and schemas.
+
+The current frontend can work independently with local browser data. The Node.js API, PostgreSQL, generated client, and schema packages are included as an extensible workspace foundation rather than being required for the current local demo experience.
+
 ### Frontend
 
 - React 19
