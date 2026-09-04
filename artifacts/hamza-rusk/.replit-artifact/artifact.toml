@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Hamza Rusk"
+description = "An offline bakery management app for Hamza Rusk with product catalog, customers, point of sale, purchases, inventory, reports, and settings. All data is stored locally in the browser for dependable use without internet access."
+version = "1.0.0"
+id = "artifacts/hamza-rusk"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23000
+
+[services.development]
+run = "pnpm --filter @workspace/hamza-rusk run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hamza-rusk", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/hamza-rusk/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23000"
+BASE_PATH = "/"
