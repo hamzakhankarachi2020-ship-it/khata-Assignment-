@@ -18,6 +18,35 @@ The application is designed for quick counter work: fewer screens, clear stock s
 - **Responsive layout** with a desktop sidebar, compact mobile navigation, responsive tables, and mobile-friendly forms.
 - **Offline-ready local workspace** with browser persistence through `localStorage` and no required server-side database.
 
+## Complete Application Functions
+
+| Area | Available functions |
+| --- | --- |
+| **Overview** | View daily revenue, completed tickets, units moved, low-stock count, open credit, sales rhythm, latest tickets, and items needing attention. |
+| **Point of sale** | Search or scan-style product search, add products to cart, change quantities, remove items, select a customer, select cash/card/credit payment, hold a cart, restore a held cart, complete a sale, create a receipt number, and update stock. |
+| **Products** | Add products, edit products, delete products, activate or deactivate catalog items, set SKU, category, unit, selling price, cost price, stock quantity, low-stock threshold, search products, filter by category, and export product records to CSV. |
+| **Customers** | Add customer records, edit contact details, delete customers, store phone/email/area, record opening balance, search by name/phone/area, view customer status, and export the customer ledger to CSV. |
+| **Purchases** | Record supplier deliveries, add invoice/reference numbers, select received products, enter quantities, calculate purchase totals, mark purchases as received, increase stock automatically, search supplier records, and export purchases to CSV. |
+| **Inventory** | Search stock, view SKU and on-hand quantity, view low-stock threshold, calculate stock value at cost, identify healthy/low/out-of-stock items, make manual quantity adjustments, record adjustment reasons, and review recent adjustments. |
+| **Sales history** | Search receipts, customers, and payment methods; view items, totals, status, and dates; and export filtered sales records to CSV. |
+| **Reports** | Calculate recorded revenue, cost of goods, gross profit, average ticket, stock value, product movement, and export a summary report to CSV. |
+| **Settings** | Update shop name, phone, currency, address, receipt footer, and low-stock alert preference; save settings locally; and restore the original demo dataset. |
+| **Navigation and feedback** | Responsive sidebar, mobile menu, route-based navigation, active navigation state, search controls, confirmation dialogs, success toasts, empty states, loading/error boundary, and a branded 404 page. |
+
+## Routes
+
+| Route | Screen |
+| --- | --- |
+| `/` | Overview dashboard |
+| `/pos` | Point of sale counter |
+| `/sales` | Sales history |
+| `/customers` | Customer ledger |
+| `/products` | Product catalog |
+| `/inventory` | Stock and adjustments |
+| `/purchases` | Purchase records |
+| `/reports` | Business reports |
+| `/settings` | Workspace settings |
+
 ## Product Rules and Workflows
 
 ### Point of sale
@@ -48,6 +77,17 @@ The application is designed for quick counter work: fewer screens, clear stock s
 3. Data is device-local and is not synchronized between browsers or computers.
 4. The Settings page can restore the original demo dataset.
 
+### Validation and safety rules
+
+1. Product and customer forms reject required fields that are empty.
+2. Prices, costs, quantities, and thresholds use non-negative numeric inputs.
+3. A sale with no cart items is rejected with a user notification.
+4. A purchase requires a supplier and a valid product selection.
+5. An inventory adjustment requires a non-zero quantity change.
+6. Delete actions require browser confirmation before changing local data.
+7. CSV export safely quotes values and is available for products, customers, purchases, sales, and reports.
+8. Route-level rendering is wrapped in an error boundary so a screen failure does not silently break the entire workspace.
+
 ## Technology Stack
 
 ### Frontend
@@ -70,6 +110,46 @@ The application is designed for quick counter work: fewer screens, clear stock s
 - ESLint-style component conventions through the existing UI structure
 - Reusable UI primitives in `artifacts/hamza-rusk/src/components/ui`
 - API, database, and generated client packages are kept in the workspace for future expansion
+
+## Package Guide
+
+### Root workspace
+
+- `typescript`: TypeScript compiler and project-reference orchestration.
+- `prettier`: Formatting support.
+- `@replit/connectors-sdk`: Connector support available to the workspace.
+- `pnpm-workspace.yaml`: Workspace package definitions, dependency catalogs, release-age policy, and platform overrides.
+
+### `@workspace/hamza-rusk`
+
+- `react`, `react-dom`: UI rendering.
+- `vite`, `@vitejs/plugin-react`: Development server and production bundling.
+- `wouter`: Client-side routing.
+- `@tanstack/react-query`: Query client/provider foundation.
+- `tailwindcss`, `@tailwindcss/vite`, `tw-animate-css`, `tailwind-merge`: Styling and utility-class support.
+- `lucide-react`, `react-icons`: Interface icons.
+- `@radix-ui/*`: Accessible primitives for dialogs, menus, forms, navigation, overlays, and controls.
+- `react-hook-form`, `@hookform/resolvers`, `zod`: Form and validation foundations.
+- `date-fns`: Date-related utility support.
+- `recharts`: Charting support for reporting surfaces.
+- `framer-motion`: Motion support available for interactive UI.
+- `sonner`, `vaul`, `cmdk`, `embla-carousel-react`, `react-day-picker`, `input-otp`, `react-resizable-panels`, `next-themes`, `class-variance-authority`, and `clsx`: Reusable UI and interaction utilities.
+- `@replit/vite-plugin-runtime-error-modal`, `@replit/vite-plugin-cartographer`, `@replit/vite-plugin-dev-banner`: Development-only Replit tooling.
+- Windows native packages for `rollup`, `esbuild`, `lightningcss`, and Tailwind Oxide: Platform-specific build support on Windows.
+
+### Backend and data packages
+
+- `@workspace/api-server`: Express 5 API server with CORS, cookie parsing, structured logging through Pino, and source-map enabled runtime scripts.
+- `@workspace/db`: Drizzle ORM, PostgreSQL driver, Drizzle Zod integration, and database schema exports.
+- `@workspace/api-zod`: Shared Zod schemas and generated API types.
+- `@workspace/api-client-react`: React Query-compatible generated API client package.
+- `@workspace/api-spec`: OpenAPI source and Orval code generation configuration.
+
+### Supporting workspace
+
+- `@workspace/mockup-sandbox`: Separate Vite-based mockup preview environment with reusable Radix UI components, Framer Motion, Recharts, and development file watching.
+- `scripts`: Workspace utility package and post-merge support script.
+- `attached_assets`: Shared static assets used by the workspace.
 
 ## Project Structure
 
