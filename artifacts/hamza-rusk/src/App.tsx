@@ -8,7 +8,7 @@ import {
   Archive, ArrowDownToLine, BarChart3, Boxes, ChevronRight, CircleDollarSign,
   DatabaseBackup, Home, Menu, Package, Pencil,
   Plus, Receipt, RefreshCcw, Search, Settings as SettingsIcon, ShoppingBag, ShoppingCart,
-  SlidersHorizontal, Trash2, TrendingUp, Users, Wallet, X, Check, AlertTriangle,
+  SlidersHorizontal, Trash2, TrendingUp, Users, Wallet, X, Check, AlertTriangle, LockKeyhole,
 } from 'lucide-react';
 
 type Product = { id: string; name: string; sku: string; category: string; unit: string; price: number; cost: number; stock: number; lowStockAt: number; active: boolean; image?: string };
@@ -19,6 +19,7 @@ type Purchase = { id: string; supplier: string; referenceNo: string; items: Sale
 type Adjustment = { id: string; productName: string; change: number; reason: string; createdAt: string };
 type Settings = { shopName: string; phone: string; address: string; receiptFooter: string; currency: string; lowStockAlerts: boolean };
 type Data = { products: Product[]; customers: Customer[]; sales: Sale[]; purchases: Purchase[]; adjustments: Adjustment[]; settings: Settings };
+type SessionUser = { username: string; role: 'Admin' };
 
 const seed: Data = {
   products: [
@@ -54,21 +55,31 @@ const dateLabel = (value: string) => new Date(value).toLocaleDateString('en-PK',
 const dateKey = (value: Date | string) => new Date(value).toISOString().slice(0, 10);
 const uid = (prefix: string) => `${prefix}${Date.now().toString(36)}`;
 const loadData = (): Data => { try { const saved = localStorage.getItem('hamza-rusk-data'); return saved ? JSON.parse(saved) : seed; } catch { return seed; } };
+const loadSession = (): SessionUser | null => { try { const saved = localStorage.getItem('hamza-rusk-session'); return saved ? JSON.parse(saved) : null; } catch { return null; } };
 const queryClient = new QueryClient();
 
 function App() {
   const [data, setData] = useState<Data>(loadData);
+  const [session, setSession] = useState<SessionUser | null>(loadSession);
   const [toast, setToast] = useState('');
   useEffect(() => { localStorage.setItem('hamza-rusk-data', JSON.stringify(data)); }, [data]);
   const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(''), 2600); };
   const update = (patch: Partial<Data>, message?: string) => { setData((d) => ({ ...d, ...patch })); if (message) notify(message); };
   const reset = () => { if (window.confirm('Reset all local demo data? This cannot be undone.')) { setData(seed); notify('Demo data restored'); } };
-  return <QueryClientProvider client={queryClient}><TooltipProvider><AppRouter data={data} update={update} notify={notify} reset={reset} /><Toaster />{toast && <div className="toast" data-testid="status-toast"><Check size={16} /> {toast}</div>}</TooltipProvider></QueryClientProvider>;
+  const login = (user: SessionUser) => { localStorage.setItem('hamza-rusk-session', JSON.stringify(user)); setSession(user); };
+  const logout = () => { localStorage.removeItem('hamza-rusk-session'); setSession(null); };
+  return <QueryClientProvider client={queryClient}><TooltipProvider>{session ? <AppRouter data={data} update={update} notify={notify} reset={reset} user={session} logout={logout} /> : <Login onLogin={login} />}<Toaster />{toast && <div className="toast" data-testid="status-toast"><Check size={16} /> {toast}</div>}</TooltipProvider></QueryClientProvider>;
 }
 
-function AppRouter({ data, update, notify, reset }: { data: Data; update: (patch: Partial<Data>, message?: string) => void; notify: (message: string) => void; reset: () => void }) {
+function Login({ onLogin }: { onLogin: (user: SessionUser) => void }) {
+  const [username, setUsername] = useState(''); const [password, setPassword] = useState(''); const [error, setError] = useState('');
+  const submit = (event: React.FormEvent) => { event.preventDefault(); if (username.trim().toLowerCase() === 'admin' && password === 'Admin123') onLogin({ username: 'Admin', role: 'Admin' }); else setError('Invalid demo credentials'); };
+  return <main style={{ minHeight: '100dvh', display: 'grid', placeItems: 'center', padding: 20, background: 'hsl(var(--background))' }}><section className="card" style={{ width: 'min(420px, 100%)', padding: 28 }}><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}><img src="/favicon.svg" alt="Hamza Rusk logo" style={{ width: 48, height: 48, borderRadius: 13 }} /><div><div className="serif" style={{ fontSize: 22 }}>Hamza Rusk</div><div className="mono" style={{ fontSize: 10, color: 'hsl(var(--primary))', letterSpacing: '.1em' }}>BUSINESS KHATA</div></div></div><h1 className="serif" style={{ fontSize: 30, margin: 0 }}>Welcome back</h1><p style={{ margin: '8px 0 22px', color: 'hsl(var(--muted-foreground))', fontSize: 13 }}>Sign in to open your counter workspace.</p><form onSubmit={submit} style={{ display: 'grid', gap: 15 }}><label><span className="field-label">Username</span><input autoFocus className="field" value={username} onChange={(event) => { setUsername(event.target.value); setError(''); }} placeholder="Admin" autoComplete="username" data-testid="input-login-username" required /></label><label><span className="field-label">Password</span><input type="password" className="field" value={password} onChange={(event) => { setPassword(event.target.value); setError(''); }} placeholder="Admin123" autoComplete="current-password" data-testid="input-login-password" required /></label>{error && <div className="badge badge-red" role="alert">{error}</div>}<button className="btn btn-primary" type="submit" data-testid="button-login"><LockKeyhole size={16} /> Sign in as Admin</button></form><div style={{ marginTop: 18, padding: 12, background: 'hsl(var(--muted))', borderRadius: 8, fontSize: 11, color: 'hsl(var(--muted-foreground))' }}>Demo role: <b>Admin</b> · Use the demo credentials provided for this workspace.</div></section></main>;
+}
+
+function AppRouter({ data, update, notify, reset, user, logout }: { data: Data; update: (patch: Partial<Data>, message?: string) => void; notify: (message: string) => void; reset: () => void; user: SessionUser; logout: () => void }) {
   const [location] = useLocation();
-  return <RoutedErrorBoundary resetKey={location}><Shell data={data}><Switch>
+  return <RoutedErrorBoundary resetKey={location}><Shell data={data} user={user} logout={logout}><Switch>
     <Route path="/" component={() => <Dashboard data={data} />} />
     <Route path="/pos" component={() => <POS data={data} update={update} notify={notify} />} />
     <Route path="/products" component={() => <Products data={data} update={update} notify={notify} />} />
@@ -93,7 +104,7 @@ const nav = [
   { href: '/purchases', label: 'Purchases', icon: ShoppingBag },
   { href: '/reports', label: 'Reports', icon: BarChart3 },
 ];
-function Shell({ children, data }: { children: ReactNode; data: Data }) {
+function Shell({ children, data, user, logout }: { children: ReactNode; data: Data; user: SessionUser; logout: () => void }) {
   const [location] = useLocation(); const [menu, setMenu] = useState(false);
   return <div className="app-shell">
     <aside className="sidebar">
@@ -104,7 +115,7 @@ function Shell({ children, data }: { children: ReactNode; data: Data }) {
       <div style={{ marginTop: 'auto', paddingBottom: 12 }}><NavItem item={{ href: '/settings', label: 'Settings', icon: SettingsIcon }} location={location} /><div className="sidebar-foot" style={{ padding: '12px 24px 0', borderTop: '1px solid hsl(var(--sidebar-border))', color: 'hsl(var(--sidebar-foreground) / .42)', fontSize: 10 }}>OFFLINE MODE · DATA ON THIS DEVICE</div></div>
     </aside>
     <div className="main-wrap">
-      <header className="topbar"><button className="btn btn-ghost" onClick={() => setMenu(!menu)} style={{ padding: 7 }} data-testid="button-menu"><Menu size={18} /></button><div className="topbar-search" style={{ maxWidth: 430, flex: 1, position: 'relative' }}><Search size={15} style={{ position: 'absolute', left: 12, top: 11, color: 'hsl(var(--muted-foreground))' }} /><input className="field" style={{ paddingLeft: 36, background: 'hsl(var(--muted) / .54)' }} placeholder="Search products, customers, records" data-testid="input-global-search" /></div><div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}><span className="hide-mobile" style={{ fontSize: 12, color: 'hsl(var(--muted-foreground))' }}>Local workspace</span><span style={{ width: 30, height: 30, borderRadius: 50, display: 'grid', placeItems: 'center', background: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))', fontWeight: 700, fontSize: 12 }}>HA</span></div></header>
+      <header className="topbar"><button className="btn btn-ghost" onClick={() => setMenu(!menu)} style={{ padding: 7 }} data-testid="button-menu"><Menu size={18} /></button><div className="topbar-search" style={{ maxWidth: 430, flex: 1, position: 'relative' }}><Search size={15} style={{ position: 'absolute', left: 12, top: 11, color: 'hsl(var(--muted-foreground))' }} /><input className="field" style={{ paddingLeft: 36, background: 'hsl(var(--muted) / .54)' }} placeholder="Search products, customers, records" data-testid="input-global-search" /></div><div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}><span className="hide-mobile" style={{ fontSize: 12, color: 'hsl(var(--muted-foreground))' }}>{user.role} · {user.username}</span><span style={{ width: 30, height: 30, borderRadius: 50, display: 'grid', placeItems: 'center', background: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))', fontWeight: 700, fontSize: 12 }}>AD</span><button className="btn btn-ghost" onClick={logout} data-testid="button-logout" title="Sign out"><LockKeyhole size={15} /></button></div></header>
       {menu && <div className="card" style={{ position: 'fixed', top: 60, left: 12, zIndex: 20, padding: 8 }}><b style={{ display: 'block', padding: 8, fontSize: 12 }}>Quick navigation</b>{nav.concat({ href: '/settings', label: 'Settings', icon: SettingsIcon }).map((item) => <NavItem key={item.href} item={item} location={location} onClick={() => setMenu(false)} />)}</div>}
       {children}
     </div>
