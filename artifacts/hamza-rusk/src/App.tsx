@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 type Product = { id: string; name: string; sku: string; category: string; unit: string; price: number; cost: number; stock: number; lowStockAt: number; active: boolean; image?: string };
-type Customer = { id: string; name: string; phone: string; email: string; area: string; balance: number; status: string };
+type Customer = { id: string; name: string; phone: string; email: string; area: string; balance: number; status: string; image?: string };
 type SaleItem = { productId: string; name: string; qty: number; price: number };
 type Sale = { id: string; receiptNo: string; customerName: string; items: SaleItem[]; total: number; paymentMethod: string; status: string; createdAt: string };
 type Purchase = { id: string; supplier: string; referenceNo: string; items: SaleItem[]; total: number; status: string; createdAt: string };
@@ -21,20 +21,28 @@ type Settings = { shopName: string; phone: string; address: string; receiptFoote
 type Data = { products: Product[]; customers: Customer[]; sales: Sale[]; purchases: Purchase[]; adjustments: Adjustment[]; settings: Settings };
 type SessionUser = { username: string; role: 'Admin' };
 
+const demoRuskImages = [
+  new URL('../../../attached_assets/IMG-20260824-WA0003_1787869056106.jpg', import.meta.url).href,
+  new URL('../../../attached_assets/IMG-20260824-WA0004_1787869056195.jpg', import.meta.url).href,
+  new URL('../../../attached_assets/IMG-20260824-WA0006_1787869056152.jpg', import.meta.url).href,
+  new URL('../../../attached_assets/IMG-20260824-WA0007_1787869056077.jpg', import.meta.url).href,
+];
+const demoCustomerImages = [demoRuskImages[1], demoRuskImages[2], demoRuskImages[3], demoRuskImages[0]];
+
 const seed: Data = {
   products: [
-    { id: 'p1', name: 'Classic Cardamom Rusk', sku: 'RUSK-001', category: 'Signature', unit: 'box', price: 320, cost: 184, stock: 42, lowStockAt: 12, active: true },
-    { id: 'p2', name: 'Elaichi Family Pack', sku: 'RUSK-002', category: 'Signature', unit: 'pack', price: 580, cost: 336, stock: 18, lowStockAt: 8, active: true },
-    { id: 'p3', name: 'Butter Toast Slices', sku: 'TOAST-014', category: 'Daily bake', unit: 'pack', price: 240, cost: 128, stock: 7, lowStockAt: 10, active: true },
-    { id: 'p4', name: 'Coconut Crunch Rusk', sku: 'RUSK-009', category: 'Flavoured', unit: 'box', price: 390, cost: 210, stock: 26, lowStockAt: 8, active: true },
-    { id: 'p5', name: 'Mini Tea Rusks', sku: 'RUSK-021', category: 'Daily bake', unit: 'jar', price: 275, cost: 146, stock: 0, lowStockAt: 6, active: false },
-    { id: 'p6', name: 'Almond Celebration Box', sku: 'GIFT-003', category: 'Gift boxes', unit: 'box', price: 890, cost: 520, stock: 11, lowStockAt: 4, active: true },
+    { id: 'p1', name: 'Classic Cardamom Rusk', sku: 'RUSK-001', category: 'Signature', unit: 'box', price: 320, cost: 184, stock: 42, lowStockAt: 12, active: true, image: demoRuskImages[0] },
+    { id: 'p2', name: 'Elaichi Family Pack', sku: 'RUSK-002', category: 'Signature', unit: 'pack', price: 580, cost: 336, stock: 18, lowStockAt: 8, active: true, image: demoRuskImages[1] },
+    { id: 'p3', name: 'Butter Toast Slices', sku: 'TOAST-014', category: 'Daily bake', unit: 'pack', price: 240, cost: 128, stock: 7, lowStockAt: 10, active: true, image: demoRuskImages[2] },
+    { id: 'p4', name: 'Coconut Crunch Rusk', sku: 'RUSK-009', category: 'Flavoured', unit: 'box', price: 390, cost: 210, stock: 26, lowStockAt: 8, active: true, image: demoRuskImages[3] },
+    { id: 'p5', name: 'Mini Tea Rusks', sku: 'RUSK-021', category: 'Daily bake', unit: 'jar', price: 275, cost: 146, stock: 0, lowStockAt: 6, active: false, image: demoRuskImages[0] },
+    { id: 'p6', name: 'Almond Celebration Box', sku: 'GIFT-003', category: 'Gift boxes', unit: 'box', price: 890, cost: 520, stock: 11, lowStockAt: 4, active: true, image: demoRuskImages[1] },
   ],
   customers: [
-    { id: 'c1', name: 'Ayesha Khan', phone: '0300 812 4471', email: 'ayesha.khan@email.com', area: 'Gulberg III', balance: 0, status: 'Active' },
-    { id: 'c2', name: 'Noman Traders', phone: '0321 558 1902', email: 'accounts@nomantraders.pk', area: 'Model Town', balance: 1860, status: 'Active' },
-    { id: 'c3', name: 'Sana Malik', phone: '0333 201 7750', email: 'sana.m@email.com', area: 'Johar Town', balance: 0, status: 'Active' },
-    { id: 'c4', name: 'Bilal Ahmed', phone: '0301 992 3184', email: '', area: 'DHA Phase 4', balance: 420, status: 'Active' },
+    { id: 'c1', name: 'Ayesha Khan', phone: '0300 812 4471', email: 'ayesha.khan@email.com', area: 'Gulberg III', balance: 0, status: 'Active', image: demoCustomerImages[0] },
+    { id: 'c2', name: 'Noman Traders', phone: '0321 558 1902', email: 'accounts@nomantraders.pk', area: 'Model Town', balance: 1860, status: 'Active', image: demoCustomerImages[1] },
+    { id: 'c3', name: 'Sana Malik', phone: '0333 201 7750', email: 'sana.m@email.com', area: 'Johar Town', balance: 0, status: 'Active', image: demoCustomerImages[2] },
+    { id: 'c4', name: 'Bilal Ahmed', phone: '0301 992 3184', email: '', area: 'DHA Phase 4', balance: 420, status: 'Active', image: demoCustomerImages[3] },
   ],
   sales: [
     { id: 's1', receiptNo: 'HR-1048', customerName: 'Walk-in customer', items: [{ productId: 'p1', name: 'Classic Cardamom Rusk', qty: 2, price: 320 }], total: 640, paymentMethod: 'Cash', status: 'Completed', createdAt: '2026-08-24T10:35:00' },
@@ -104,6 +112,12 @@ const nav = [
   { href: '/purchases', label: 'Purchases', icon: ShoppingBag },
   { href: '/reports', label: 'Reports', icon: BarChart3 },
 ];
+function DemoVisuals({ location, data }: { location: string; data: Data }) {
+  if (!['/products', '/inventory', '/customers'].includes(location)) return null;
+  const customerView = location === '/customers';
+  const items = customerView ? data.customers : data.products;
+  return <section style={{ display: 'flex', gap: 10, overflowX: 'auto', padding: '12px 40px 0', maxWidth: 1440, margin: '0 auto' }} aria-label={customerView ? 'Customer photos' : 'Product photos'}>{items.slice(0, 4).map((item) => <div key={item.id} style={{ minWidth: 112, display: 'flex', alignItems: 'center', gap: 8, padding: 7, background: 'hsl(var(--card))', border: '1px solid hsl(var(--card-border))', borderRadius: 10 }}><img src={item.image} alt={customerView ? `${item.name} customer avatar` : `${item.name} product photo`} style={{ width: 38, height: 38, borderRadius: customerView ? '50%' : 7, objectFit: 'cover', display: 'block' }} /><span style={{ fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap' }}>{item.name}</span></div>)}</section>;
+}
 function Shell({ children, data, user, logout }: { children: ReactNode; data: Data; user: SessionUser; logout: () => void }) {
   const [location] = useLocation(); const [menu, setMenu] = useState(false);
   return <div className="app-shell">
@@ -117,7 +131,7 @@ function Shell({ children, data, user, logout }: { children: ReactNode; data: Da
     <div className="main-wrap">
       <header className="topbar"><button className="btn btn-ghost" onClick={() => setMenu(!menu)} style={{ padding: 7 }} data-testid="button-menu"><Menu size={18} /></button><div className="topbar-search" style={{ maxWidth: 430, flex: 1, position: 'relative' }}><Search size={15} style={{ position: 'absolute', left: 12, top: 11, color: 'hsl(var(--muted-foreground))' }} /><input className="field" style={{ paddingLeft: 36, background: 'hsl(var(--muted) / .54)' }} placeholder="Search products, customers, records" data-testid="input-global-search" /></div><div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}><span className="hide-mobile" style={{ fontSize: 12, color: 'hsl(var(--muted-foreground))' }}>{user.role} · {user.username}</span><span style={{ width: 30, height: 30, borderRadius: 50, display: 'grid', placeItems: 'center', background: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))', fontWeight: 700, fontSize: 12 }}>AD</span><button className="btn btn-ghost" onClick={logout} data-testid="button-logout" title="Sign out"><LockKeyhole size={15} /></button></div></header>
       {menu && <div className="card" style={{ position: 'fixed', top: 60, left: 12, zIndex: 20, padding: 8 }}><b style={{ display: 'block', padding: 8, fontSize: 12 }}>Quick navigation</b>{nav.concat({ href: '/settings', label: 'Settings', icon: SettingsIcon }).map((item) => <NavItem key={item.href} item={item} location={location} onClick={() => setMenu(false)} />)}</div>}
-      {children}
+      <DemoVisuals location={location} data={data} />{children}
     </div>
   </div>;
 }
